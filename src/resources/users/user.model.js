@@ -33,7 +33,27 @@ const userSchema = new Schema({
     birthDay: {
         type: String,
         required: true
-    }
+    },
+    cp: {
+        type: Number
+    },
+    street: {
+        type: String
+    },
+    exteriorNumber: {
+        type: String
+    },
+    interiorNumber: {
+        type: String
+    },
+    suburb: {
+        type: String
+    },
+    referencia: {
+        type: String
+    },
+    cart: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Product' }]
+
 });
 
 const User = mongoose.model('User', userSchema);

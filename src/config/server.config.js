@@ -28,10 +28,7 @@ class ServerConfig {
         return this.getValue('PORT', true);
     }
 
-    isProduction() {
-        const mode = this.getValue('MODE', false);
-        return mode != 'DEV';
-    }
+
 }
 
 const serverConfig = new ServerConfig(process.env)

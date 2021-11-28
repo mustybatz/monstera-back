@@ -11,7 +11,7 @@ const createAccountController = async(req, res) => {
 
     try {
 
-        const user = getUserByEmail(value.email);
+        const user = await getUserByEmail(value.email);
 
         if (user) {
             return res.status(409).json({ status: 409, message: 'User already exists' });

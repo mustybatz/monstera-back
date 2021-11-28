@@ -13,11 +13,11 @@ class Server {
     }
 
     listen() {
-        this.APP.listen(3000, () => {
+        this.APP.listen(this.PORT, () => {
             console.log(`Server listening on port: [${this.PORT}] 🚢🚢`);
         });
 
-        this.connectDb().then( _data => {
+        this.connectDb().then(_data => {
             console.log('Server bootstraping finished.');
         });
 

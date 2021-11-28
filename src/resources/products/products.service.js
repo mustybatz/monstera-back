@@ -27,10 +27,16 @@ async function deleteProduct(id) {
     await Product.findByIdAndDelete(id).exec();
 }
 
+async function searchByName(name) {
+    const product = await Product.findOne({ name });
+    return product;
+}
+
 module.exports = {
     createProduct,
     getProducts,
     getProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    searchByName
 }

@@ -11,6 +11,11 @@ const createProductSchema = Joi.object({
         'string.base': `image should be a string`,
         'string.min': `image should have a min length of {#limit}`,
         'any.required': `image is required`
+    }),
+    description: Joi.string().min(2).required().messages({
+        'string.base': `description should be a string`,
+        'string.min': `description should have a min length of {#limit}`,
+        'any.required': `description is required`
     })
 });
 

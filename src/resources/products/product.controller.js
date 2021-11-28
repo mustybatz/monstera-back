@@ -1,13 +1,20 @@
-const { createProduct, getProducts, getProduct, updateProduct, deleteProduct } = require("./products.service");
+const { createProduct, getProducts, getProduct, updateProduct, deleteProduct, searchByName } = require("./products.service");
 const createProductSchema = require("./validations/createProduct.validation");
 const updateProductSchema = require("./validations/updateProduct.validation");
 
 
 const createProductController = async(req, res) => {
+
     const { value, error } = createProductSchema.validate(req.body);
 
     if (error) {
         return res.status(400).json({ status: 400, error });
+    }
+
+    const product = await searchByName(value.name);
+
+    if (product) {
+        return res.status(409).json({ status: 409, message: 'Product already exists' });
     }
 
     try {

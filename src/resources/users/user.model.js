@@ -20,19 +20,15 @@ const userSchema = new Schema({
     },
     firstName: {
         type: String,
-        required: true
     },
     lastNameF: {
         type: String,
-        required: true
     },
     lastNameM: {
         type: String,
-        required: true
     },
     birthDay: {
         type: String,
-        required: true
     },
     cp: {
         type: Number

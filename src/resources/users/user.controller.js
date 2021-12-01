@@ -1,4 +1,4 @@
-const { createUser, getUsers, updateUser, getUser, deleteUser, signIn, getUserByEmail } = require("./user.service");
+const { createUser, getUsers, updateUser, getUser, deleteUser, signIn, getUserByEmail, addItemToCart, getUserCart, deleteItemFromCart } = require("./user.service");
 const createUserSchema = require("./validations/createUserValidation");
 const editUserSchema = require("./validations/updateUserValidation");
 
@@ -111,14 +111,66 @@ const signInController = async(req, res) => {
         }
 
     }
-
-
 }
+
+const addToCartController = async(req, res) => {
+
+    const { id } = req.params;
+    const userId = req.body.userId;
+
+    try {
+        await addItemToCart(userId, id);
+    } catch (e) {
+
+        switch (e.message) {
+            case 'User not found':
+                return res.status(404).json({ message: e.message });
+            case 'Product not found':
+                return res.status(404).json({ message: e.message });
+            default:
+                return res.status(500).json({ message: 'Internal server error' });
+        }
+
+    }
+    return res.status(200).json({ message: 'Item was successfully added' });
+}
+
+const getShoppingCartController = async(req, res) => {
+    const userId = req.body.userId;
+
+    const cart = await getUserCart(userId);
+
+    return res.status(200).json(cart);
+}
+
+const deleteShoppingItemController = async(req, res) => {
+    const userId = req.body.userId;
+    const { id } = req.params;
+
+    try {
+        await deleteItemFromCart(userId, id);
+    } catch (e) {
+        switch (e.message) {
+            case 'User not found':
+                return res.status(404).json({ message: e.message });
+            case 'Product not found':
+                return res.status(404).json({ message: e.message });
+            default:
+                return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    return res.status(200).json({ message: 'Item deleted from cart' });
+}
+
 
 module.exports = {
     createAccountController,
     getUsersController,
     updateUserController,
     deleteUserController,
-    signInController
+    signInController,
+    addToCartController,
+    getShoppingCartController,
+    deleteShoppingItemController
 }

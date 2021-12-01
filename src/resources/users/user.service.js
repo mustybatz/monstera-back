@@ -2,6 +2,7 @@ const UserModel = require('./user.model');
 const bcrypt = require('bcrypt');
 const { sign } = require('jsonwebtoken');
 const serverConfig = require('../../config/server.config');
+const { getProduct } = require('../products/products.service');
 
 async function createUser(user) {
 
@@ -57,6 +58,77 @@ async function signIn(email, password) {
     return token;
 }
 
+async function addItemToCart(userId, productId) {
+
+    const user = await UserModel.findById(userId).exec();
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    const product = await getProduct(productId);
+
+    if (!product) {
+        throw new Error('Product not found');
+    }
+
+    user.cart.push(productId);
+
+    await UserModel.findByIdAndUpdate(userId, { cart: user.cart });
+}
+
+async function getUserCart(userId) {
+
+    const user = await UserModel.findById(userId).populate('cart').exec();
+
+    const cart = user.cart;
+    const total = await getCartTotal(cart);
+
+    return {
+        cart,
+        total
+    };
+}
+
+async function deleteItemFromCart(userId, productId) {
+    const user = await UserModel.findById(userId).exec();
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    const product = await getProduct(productId);
+
+    if (!product) {
+        throw new Error('Product not found');
+    }
+
+    const idIndex = user.cart.indexOf(userId);
+
+    if (idIndex < -1) {
+        throw new Error('Product not found');
+    }
+    user.cart.splice(idIndex, 1);
+
+    await UserModel.findByIdAndUpdate(userId, { cart: user.cart });
+}
+
+/**
+ * Helper functions
+ */
+async function getCartTotal(cart) {
+    return new Promise((resolve, reject) => {
+
+        let total = 0;
+
+        cart.forEach(item => {
+            total += item.price;
+        });
+
+        resolve(total);
+    })
+}
+
 module.exports = {
     createUser,
     getUsers,
@@ -64,5 +136,8 @@ module.exports = {
     deleteUser,
     getUser,
     signIn,
-    getUserByEmail
+    getUserByEmail,
+    addItemToCart,
+    getUserCart,
+    deleteItemFromCart
 }

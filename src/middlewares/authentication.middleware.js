@@ -8,7 +8,7 @@ const authMiddleware = (role) => {
             const token = req.headers.authorization.split(" ")[1];
             const decodedToken = jwt.verify(token, serverConfig.getValue('JWT_SECRET'));
 
-            if (decodedToken.role !== role) {
+            if (!role.includes(decodedToken.role)) {
                 return res.status(403).json({ message: 'Forbidden' });
             }
             req.body.userId = decodedToken.id;

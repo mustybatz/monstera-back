@@ -9,7 +9,7 @@ userRouter.get('/', getUsersController);
 userRouter.put('/:id', updateUserController)
 userRouter.delete('/:id', deleteUserController);
 userRouter.post('/signin', signInController);
-userRouter.post('/cart/:id', authMiddleware('basic'), addToCartController);
-userRouter.get('/cart', authMiddleware('basic'), getShoppingCartController);
-userRouter.delete('/cart/:id', authMiddleware('basic'), deleteShoppingItemController);
+userRouter.post('/cart/:id', authMiddleware(['basic', 'admin', 'super-admin']), addToCartController);
+userRouter.get('/cart', authMiddleware(['basic', 'admin', 'super-admin']), getShoppingCartController);
+userRouter.delete('/cart/:id', authMiddleware(['basic', 'admin', 'super-admin']), deleteShoppingItemController);
 module.exports = userRouter;
